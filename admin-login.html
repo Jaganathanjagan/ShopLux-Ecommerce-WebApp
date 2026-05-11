@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Portal — ShopLux</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="auth.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- ========== LOADING SPLASH SCREEN ========== -->
+  <div class="splash-screen" id="splash-screen">
+    <div class="splash-inner">
+      <div class="splash-logo admin-splash">
+        <i class="fa-solid fa-user-shield splash-logo-icon"></i>
+        <span>Admin <span class="logo-accent">Portal</span></span>
+      </div>
+      <div class="splash-loader">
+        <div class="splash-bar admin-bar"></div>
+      </div>
+      <p class="splash-text">Initialising secure session…</p>
+    </div>
+  </div>
+
+  <!-- ========== TOAST ========== -->
+  <div id="toast" class="toast">
+    <i class="fa-solid fa-circle-check"></i>
+    <span id="toast-msg">Logged in!</span>
+  </div>
+
+  <!-- ========== ADMIN LOGIN PAGE ========== -->
+  <main class="admin-login-page">
+
+    <!-- Animated background grid -->
+    <div class="admin-bg-grid"></div>
+    <!-- Glowing orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="admin-login-wrap">
+
+      <!-- Header -->
+      <div class="admin-login-header">
+        <div class="admin-badge">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span>ADMIN</span>
+        </div>
+        <div class="admin-login-logo">
+          Shop<span class="logo-accent">Lux</span>
+        </div>
+        <h1 class="admin-login-title">Admin Portal</h1>
+        <p class="admin-login-sub">Restricted access — authorised personnel only</p>
+      </div>
+
+      <!-- Security notice -->
+      <div class="security-notice">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span>This is a private system. Unauthorised access is prohibited.</span>
+      </div>
+
+      <!-- Login card -->
+      <div class="admin-card">
+
+        <!-- 2FA status (cosmetic) -->
+        <div class="twofa-status">
+          <i class="fa-solid fa-lock"></i>
+          <span>Two-factor authentication enabled</span>
+          <span class="twofa-dot"></span>
+        </div>
+
+        <form id="admin-login-form" onsubmit="handleAdminLogin(event)" novalidate>
+
+          <!-- Username -->
+          <div class="field-group">
+            <label for="admin-username" class="field-label">
+              <i class="fa-solid fa-user-shield"></i> Admin Username
+            </label>
+            <div class="field-wrap">
+              <i class="fa-solid fa-user field-icon"></i>
+              <input
+                type="text" id="admin-username" name="username"
+                class="field-input" placeholder="Enter admin username"
+                autocomplete="username" required
+              />
+            </div>
+            <p class="field-error" id="admin-user-err"></p>
+          </div>
+
+          <!-- Password -->
+          <div class="field-group">
+            <label for="admin-password" class="field-label">
+              <i class="fa-solid fa-key"></i> Password
+            </label>
+            <div class="field-wrap">
+              <i class="fa-solid fa-lock field-icon"></i>
+              <input
+                type="password" id="admin-password" name="password"
+                class="field-input" placeholder="Enter admin password"
+                autocomplete="current-password" required
+              />
+              <button type="button" class="toggle-pw"
+                      onclick="togglePassword('admin-password', this)"
+                      aria-label="Show/hide password">
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+            <p class="field-error" id="admin-pw-err"></p>
+          </div>
+
+          <!-- 2FA Code -->
+          <div class="field-group">
+            <label for="admin-otp" class="field-label">
+              <i class="fa-solid fa-mobile-screen-button"></i> 2FA Code
+              <span class="optional-badge">Optional for demo</span>
+            </label>
+            <div class="otp-wrap">
+              <input type="text" maxlength="1" class="otp-box" id="otp-1" oninput="otpNext(this, 'otp-2')" />
+              <input type="text" maxlength="1" class="otp-box" id="otp-2" oninput="otpNext(this, 'otp-3')" onkeydown="otpBack(event, 'otp-1')" />
+              <input type="text" maxlength="1" class="otp-box" id="otp-3" oninput="otpNext(this, 'otp-4')" onkeydown="otpBack(event, 'otp-2')" />
+              <span class="otp-sep">—</span>
+              <input type="text" maxlength="1" class="otp-box" id="otp-4" oninput="otpNext(this, 'otp-5')" onkeydown="otpBack(event, 'otp-3')" />
+              <input type="text" maxlength="1" class="otp-box" id="otp-5" oninput="otpNext(this, 'otp-6')" onkeydown="otpBack(event, 'otp-4')" />
+              <input type="text" maxlength="1" class="otp-box" id="otp-6" onkeydown="otpBack(event, 'otp-5')" />
+            </div>
+          </div>
+
+          <!-- Error alert box -->
+          <div class="admin-alert" id="admin-alert" style="display:none;">
+            <i class="fa-solid fa-circle-xmark"></i>
+            <span id="admin-alert-msg">Invalid credentials.</span>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="auth-submit-btn admin-submit" id="admin-submit-btn">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i>
+            <span class="btn-text">Access Dashboard</span>
+            <span class="btn-loader" style="display:none;">
+              <i class="fa-solid fa-circle-notch fa-spin"></i>
+            </span>
+          </button>
+
+          <!-- Demo hint -->
+          <div class="demo-credentials">
+            <p><strong>Demo credentials:</strong></p>
+            <p>Username: <code>admin</code> &nbsp;|&nbsp; Password: <code>admin123</code></p>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- Footer links -->
+      <div class="admin-footer-links">
+        <a href="login.html">
+          <i class="fa-solid fa-arrow-left"></i> Customer Login
+        </a>
+        <a href="index.html">
+          <i class="fa-solid fa-house"></i> Back to Store
+        </a>
+      </div>
+
+    </div><!-- /admin-login-wrap -->
+  </main>
+
+  <script src="auth.js"></script>
+</body>
+</html>

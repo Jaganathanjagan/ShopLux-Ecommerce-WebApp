@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cart — ShopLux</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body class="cart-page">
+
+  <!-- ========== TOAST NOTIFICATION ========== -->
+  <div id="toast" class="toast">
+    <i class="fa-solid fa-circle-check"></i>
+    <span id="toast-msg">Item removed</span>
+  </div>
+
+  <!-- ========== NAVBAR ========== -->
+  <header class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <span class="logo-icon"><i class="fa-solid fa-bag-shopping"></i></span>
+        Shop<span class="logo-accent">Lux</span>
+      </a>
+
+      <!-- Spacer -->
+      <div style="flex:1"></div>
+
+      <div class="nav-actions">
+        <button class="icon-btn" id="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
+          <i class="fa-solid fa-moon" id="theme-icon"></i>
+        </button>
+        <a href="cart.html" class="cart-btn" aria-label="View cart">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span class="cart-count" id="cart-count">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== CART HERO ========== -->
+  <section class="cart-hero">
+    <div class="cart-hero-inner">
+      <p class="section-eyebrow">Your</p>
+      <h1 class="section-title">Shopping Cart</h1>
+      <p id="cart-summary-text">Loading your items…</p>
+    </div>
+  </section>
+
+  <!-- ========== CART LAYOUT ========== -->
+  <main>
+    <!-- Empty State -->
+    <div class="cart-empty" id="cart-empty">
+      <i class="fa-solid fa-cart-shopping"></i>
+      <h2>Your cart is empty</h2>
+      <p>Looks like you haven't added anything yet.</p>
+      <a href="index.html" class="btn-primary">
+        <i class="fa-solid fa-arrow-left"></i> Continue Shopping
+      </a>
+    </div>
+
+    <!-- Cart Layout (visible when items exist) -->
+    <div class="cart-layout" id="cart-layout">
+      <!-- Items Column -->
+      <div class="cart-items-wrap" id="cart-items-wrap">
+        <!-- Populated by cart.js -->
+      </div>
+
+      <!-- Order Summary Column -->
+      <aside class="order-summary">
+        <h3>Order Summary</h3>
+
+        <div class="summary-row">
+          <span>Subtotal (<span id="item-count">0</span> items)</span>
+          <span id="subtotal">$0.00</span>
+        </div>
+        <div class="summary-row">
+          <span>Shipping</span>
+          <span id="shipping-cost">Free</span>
+        </div>
+        <div class="summary-row">
+          <span>Tax (8%)</span>
+          <span id="tax-amount">$0.00</span>
+        </div>
+        <div class="summary-row total">
+          <span>Total</span>
+          <span class="price" id="grand-total">$0.00</span>
+        </div>
+
+        <!-- Promo Code -->
+        <div class="promo-wrap">
+          <input
+            type="text"
+            class="promo-input"
+            id="promo-input"
+            placeholder="Promo code…"
+            aria-label="Enter promo code"
+          />
+          <button class="promo-btn" onclick="applyPromo()">Apply</button>
+        </div>
+        <p id="promo-msg" style="font-size:0.78rem; margin-top:6px; color:var(--accent);"></p>
+
+        <!-- Actions -->
+        <button class="checkout-btn" onclick="handleCheckout()">
+          <i class="fa-solid fa-lock"></i> Secure Checkout
+        </button>
+        <a href="index.html" class="continue-btn">
+          <i class="fa-solid fa-arrow-left"></i> Continue Shopping
+        </a>
+        <button class="clear-cart-btn" onclick="clearCart()">
+          <i class="fa-solid fa-trash"></i> Clear Cart
+        </button>
+
+        <!-- Trust badges -->
+        <div style="display:flex; gap:16px; margin-top:24px; padding-top:20px; border-top:1px solid var(--border);">
+          <div style="text-align:center; flex:1;">
+            <i class="fa-solid fa-shield-halved" style="color:var(--accent); font-size:1.2rem;"></i>
+            <p style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">Secure</p>
+          </div>
+          <div style="text-align:center; flex:1;">
+            <i class="fa-solid fa-rotate-left" style="color:var(--accent); font-size:1.2rem;"></i>
+            <p style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">Returns</p>
+          </div>
+          <div style="text-align:center; flex:1;">
+            <i class="fa-solid fa-truck-fast" style="color:var(--accent); font-size:1.2rem;"></i>
+            <p style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">Fast Ship</p>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">Shop<span class="logo-accent">Lux</span></a>
+        <p class="footer-tagline">Premium products. Unmatched quality.</p>
+        <div class="social-links">
+          <a href="#" class="social-btn" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="social-btn" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="#" class="social-btn" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="index.html">All Products</a></li>
+          <li><a href="cart.html">Cart</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 ShopLux. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="cart.js"></script>
+</body>
+</html>

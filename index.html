@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShopLux — Premium Store</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- ========== TOAST NOTIFICATION ========== -->
+  <div id="toast" class="toast" aria-live="polite">
+    <i class="fa-solid fa-circle-check"></i>
+    <span id="toast-msg">Added to cart!</span>
+  </div>
+
+  <!-- ========== NAVBAR ========== -->
+  <header class="navbar" id="navbar">
+    <div class="nav-container">
+      <!-- Logo -->
+      <a href="index.html" class="logo">
+        <span class="logo-icon"><i class="fa-solid fa-bag-shopping"></i></span>
+        Shop<span class="logo-accent">Lux</span>
+      </a>
+
+      <!-- Search Bar -->
+      <div class="search-wrap">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input
+          type="text"
+          id="search-input"
+          class="search-input"
+          placeholder="Search products…"
+          autocomplete="off"
+        />
+        <button class="search-clear" id="search-clear" title="Clear search">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Nav Actions -->
+      <div class="nav-actions">
+        <!-- Dark Mode Toggle -->
+        <button class="icon-btn" id="theme-toggle" title="Toggle dark/light mode" aria-label="Toggle theme">
+          <i class="fa-solid fa-moon" id="theme-icon"></i>
+        </button>
+
+        <!-- Cart Button -->
+        <a href="cart.html" class="cart-btn" aria-label="View cart">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span class="cart-count" id="cart-count">0</span>
+        </a>
+
+        <!-- Hamburger (mobile) -->
+        <button class="hamburger" id="hamburger" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Nav Menu -->
+    <nav class="mobile-nav" id="mobile-nav">
+      <a href="#categories" onclick="closeMobileNav()">Categories</a>
+      <a href="#products"   onclick="closeMobileNav()">Products</a>
+      <a href="cart.html">Cart</a>
+    </nav>
+  </header>
+
+  <!-- ========== HERO SECTION ========== -->
+  <section class="hero" id="hero">
+    <div class="hero-bg-pattern"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">New Season · 2025</p>
+      <h1 class="hero-title">
+        Discover<br />
+        <span class="hero-accent">Premium</span><br />
+        Products
+      </h1>
+      <p class="hero-sub">
+        Curated goods from top brands — delivered with care and style.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">
+          Shop Now <i class="fa-solid fa-arrow-right"></i>
+        </button>
+        <button class="btn-ghost" onclick="document.getElementById('categories').scrollIntoView({behavior:'smooth'})">
+          Browse Categories
+        </button>
+      </div>
+    </div>
+    <div class="hero-floats">
+      <div class="float-card fc1"><i class="fa-solid fa-star"></i><span>4.9 Rating</span></div>
+      <div class="float-card fc2"><i class="fa-solid fa-truck-fast"></i><span>Free Shipping</span></div>
+      <div class="float-card fc3"><i class="fa-solid fa-shield-halved"></i><span>Secure Pay</span></div>
+    </div>
+  </section>
+
+  <!-- ========== CATEGORIES SECTION ========== -->
+  <section class="categories-section" id="categories">
+    <div class="section-header">
+      <p class="section-eyebrow">Shop by</p>
+      <h2 class="section-title">Categories</h2>
+    </div>
+    <div class="categories-grid" id="categories-grid">
+      <!-- Populated by JS -->
+    </div>
+  </section>
+
+  <!-- ========== PRODUCTS SECTION ========== -->
+  <section class="products-section" id="products">
+    <div class="section-header">
+      <p class="section-eyebrow">Our</p>
+      <h2 class="section-title">Collection</h2>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <div class="filter-tabs" id="filter-tabs">
+        <button class="filter-tab active" data-filter="all">All</button>
+        <!-- Dynamic category tabs added by JS -->
+      </div>
+      <div class="sort-wrap">
+        <label for="sort-select" class="sr-only">Sort by</label>
+        <select id="sort-select" class="sort-select">
+          <option value="default">Sort: Default</option>
+          <option value="price-asc">Price: Low → High</option>
+          <option value="price-desc">Price: High → Low</option>
+          <option value="rating">Top Rated</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="products-grid" id="products-grid">
+      <!-- Skeleton loaders shown initially -->
+    </div>
+
+    <!-- No results -->
+    <div class="no-results" id="no-results" style="display:none;">
+      <i class="fa-solid fa-box-open"></i>
+      <p>No products found.</p>
+      <button class="btn-primary" onclick="clearFilters()">Clear Filters</button>
+    </div>
+  </section>
+
+  <!-- ========== PRODUCT DETAIL MODAL ========== -->
+  <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-label="Product details">
+    <div class="modal-card">
+      <button class="modal-close" id="modal-close" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+      <div class="modal-inner" id="modal-inner">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">
+          Shop<span class="logo-accent">Lux</span>
+        </a>
+        <p class="footer-tagline">Premium products. Unmatched quality.</p>
+        <div class="social-links">
+          <a href="#" class="social-btn" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="social-btn" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="#" class="social-btn" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" class="social-btn" aria-label="Pinterest"><i class="fa-brands fa-pinterest-p"></i></a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="#">New Arrivals</a></li>
+          <li><a href="#">Best Sellers</a></li>
+          <li><a href="#">Sale</a></li>
+          <li><a href="cart.html">Cart</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press</a></li>
+          <li><a href="#">Blog</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Shipping</a></li>
+          <li><a href="#">Returns</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 ShopLux. All rights reserved.</p>
+      <p>Powered by <a href="https://fakestoreapi.com" target="_blank">Fake Store API</a></p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
